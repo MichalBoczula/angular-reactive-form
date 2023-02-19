@@ -1,0 +1,22 @@
+<form class="row g-3 text-dark pb-2" *ngIf="(chosenProduct$ | async) && !(isEditMode$ | async)">
+    <div class="col-md-6">
+        <label for="name" class="form-label">Product name</label>
+        <input type="text" class="form-control" id="name" value="{{(chosenProduct$ | async)?.productName}}">
+    </div>
+    <div class="col-md-6">
+        <label for="code" class="form-label">Product code</label>
+        <input type="text" class="form-control" id="code" value="{{(chosenProduct$ | async)?.productCode}}">
+    </div>
+    <div class="col-md-6">
+        <label for="description" class="form-label">Description</label>
+        <input type="text" class="form-control" id="description" value="{{(chosenProduct$ | async)?.description}}">
+    </div>
+    <div class="col-md-6">
+        <label for="price" class="form-label">Price</label>
+        <input type="number" class="form-control" id="price" value="{{(chosenProduct$ | async)?.price}}" min="0"
+            step="0.01">
+    </div>
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Update</button>
+    </div>
+</form>

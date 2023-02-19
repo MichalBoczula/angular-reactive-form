@@ -1,0 +1,36 @@
+<div class="mx-5 text-center mt-5 gx-0 gy-0">
+    <div class="row">
+        <div class="col-md-5">
+            <table class="table table-striped">
+                <thead>
+                    <tr class="table-dark">
+                        <th scope="col">Id</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let product of products$ | async" (click)="selectProduct(product)"
+                        [ngClass]="{'table-primary' : product.id === (chosenProductId$ | async)}">
+                        <th scope="row">{{product.id}}</th>
+                        <td>{{product.productName}}
+                            <span *ngIf="displayCode$ | async">{{product.productCode}}</span>
+                        </td>
+                        <td>{{product.description}}</td>
+                        <td>{{product.price |currency:'EUR':true}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="btn btn-primary" (click)="showProductCode()">Show product code</button>
+            <button class="btn btn-primary" (click)="addProduct()">Add new product</button>
+        </div>
+        <div class=" col-md-7">
+            <app-products-edit></app-products-edit>
+            <app-products-add></app-products-add>
+        </div>
+    </div>
+    <div *ngIf="errorMessage$ | async as errorMessage" class="alert alert-danger">
+        {{errorMessage}}
+    </div>
+</div>
