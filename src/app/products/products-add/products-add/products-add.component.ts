@@ -5,7 +5,32 @@ import { ProductReducerState } from '../../state/product.reducer';
 import { getCurrentProduct, getIsEditMode } from '../../state/product.selectors';
 import * as ProductPageAction from './../../state/actions/product-page-actions';
 import { Observable } from 'rxjs';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
+
+function customeValidator(c: AbstractControl): { [key: string]: boolean } | null {
+  if (c.value === 'aaa') {
+    return { 'input': false };
+  }
+  return null;
+}
+
+function customeValidatorWithParam(syntax: string): ValidatorFn {
+  return (c: AbstractControl): { [key: string]: boolean } | null => {
+    if (c.value === syntax) {
+      return { 'inputWithParam': false };
+    }
+    return null;
+  }
+}
+
+function emailValidation(c: AbstractControl): { [key: string]: boolean } | null {
+  const email = c.get('email');
+  const emailConfirm = c.get('emailConfirm');
+  if (email !== emailConfirm) {
+    return { 'the same emails': false };
+  }
+  return null;
+}
 
 @Component({
   selector: 'app-products-add',
@@ -23,10 +48,14 @@ export class ProductsAddComponent implements OnInit {
 
   ngOnInit(): void {
     this.productForm = this.formBuilder.group({
-      productName: '',
-      productCode: '',
-      description: '',
-      price: ''
+      productName: ['', [Validators.required, customeValidatorWithParam('bbb')]],
+      productCode: ['', [Validators.required, customeValidator]],
+      description: ['', [Validators.required]],
+      price: ['', [Validators.required, Validators.min(0)]],
+      emailGroup: this.formBuilder.group({
+        email: ['', [Validators.required, Validators.email]],
+        emailConfirm: ['', [Validators.required, Validators.email]]
+      }, { validator: emailValidation })
     })
 
     // FormControl is associated in FormBulder, but
@@ -66,5 +95,12 @@ export class ProductsAddComponent implements OnInit {
       productName: 'testName',
       productCode: 'testCode',
     })
+  }
+
+  setNotification(): void {
+    const required = this.productForm.get('emailGroup.emailConfirm')?.errors?.['input'];
+    console.log(required);
+    const aaaa = this.productForm.get('emailGroup');
+    console.log(aaaa);
   }
 }
