@@ -4,7 +4,7 @@ import { Product } from '../../product-model';
 import { ProductReducerState } from '../../state/product.reducer';
 import { getCurrentProduct, getIsEditMode } from '../../state/product.selectors';
 import * as ProductPageAction from './../../state/actions/product-page-actions';
-import { Observable } from 'rxjs';
+import { debounceTime, Observable } from 'rxjs';
 import { FormGroup, FormBuilder, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 
 function customeValidator(c: AbstractControl): { [key: string]: boolean } | null {
@@ -44,6 +44,13 @@ export class ProductsAddComponent implements OnInit {
   isEditMode$!: Observable<boolean>;
   productForm!: FormGroup;
 
+  private validationMessages = {
+    required: 'Email is required',
+    'the same emails': 'Emails must be the same'
+  }
+
+  emailMessages = '';
+
   constructor(private store: Store<ProductReducerState>, private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
@@ -56,7 +63,15 @@ export class ProductsAddComponent implements OnInit {
         email: ['', [Validators.required, Validators.email]],
         emailConfirm: ['', [Validators.required, Validators.email]]
       }, { validator: emailValidation })
-    })
+    });
+
+    // this.productForm.get('emailGroup')?.valueChanges.subscribe(
+    //   value => this.displayChanges(value));
+
+    const emailGroup = this.productForm.get('emailGroup');
+
+    emailGroup?.valueChanges.pipe(debounceTime(1000))
+      .subscribe(value => this.setMessage(emailGroup));
 
     // FormControl is associated in FormBulder, but
     // FormBuilder is much more complex
@@ -102,5 +117,25 @@ export class ProductsAddComponent implements OnInit {
     console.log(required);
     const aaaa = this.productForm.get('emailGroup');
     console.log(aaaa);
+  }
+
+  displayChanges(value: string): void {
+    console.log(value);
+  }
+
+  setMessage(control: AbstractControl | null): void {
+    this.emailMessages = '';
+    if ((control?.touched || control?.dirty) && control?.errors) {
+      Object.keys(control.errors).forEach(x => {
+        if (x === 'the same emails') {
+          this.emailMessages += this.validationMessages['the same emails']
+        }
+        if (x === 'required') {
+          this.emailMessages += ` ${this.validationMessages.required}`
+        }
+      });
+    }
+
+    console.log(this.emailMessages);
   }
 }
