@@ -9,6 +9,8 @@ import { ProductsAddComponent } from './products-add/products-add/products-add.c
 import { EffectsModule } from '@ngrx/effects';
 import { ProductEffects } from './state/product.effects';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
+import { ProductInMemoryDb } from './services/ProductInMemoryDb';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     StoreModule.forFeature('products', ProductReducer),
     EffectsModule.forFeature([ProductEffects]),
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    InMemoryWebApiModule.forRoot(ProductInMemoryDb)
   ],
   exports: [
     ProductsListComponent

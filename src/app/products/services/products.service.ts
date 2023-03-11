@@ -9,7 +9,7 @@ import { Product } from '../product-model';
 export class ProductsService {
 
   // private products: Product[] = [];
-  private productUrl: string = 'http://localhost:4201/api/products';
+  private productUrl: string = 'api/products';
 
   constructor(private httpClient: HttpClient) { }
 
