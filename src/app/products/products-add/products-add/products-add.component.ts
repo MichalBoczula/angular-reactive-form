@@ -5,7 +5,7 @@ import { ProductReducerState } from '../../state/product.reducer';
 import { getCurrentProduct, getIsEditMode } from '../../state/product.selectors';
 import * as ProductPageAction from './../../state/actions/product-page-actions';
 import { debounceTime, Observable } from 'rxjs';
-import { FormGroup, FormBuilder, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, AbstractControl, ValidatorFn, FormArray } from '@angular/forms';
 
 function customeValidator(c: AbstractControl): { [key: string]: boolean } | null {
   if (c.value === 'aaa') {
@@ -49,7 +49,13 @@ export class ProductsAddComponent implements OnInit {
     'the same emails': 'Emails must be the same'
   }
 
+  get addresses(): FormArray {
+    return this.productForm.get('addresses') as FormArray;
+  }
+
   emailMessages = '';
+
+  showAddress = false;
 
   constructor(private store: Store<ProductReducerState>, private formBuilder: FormBuilder) { }
 
@@ -62,7 +68,8 @@ export class ProductsAddComponent implements OnInit {
       emailGroup: this.formBuilder.group({
         email: ['', [Validators.required, Validators.email]],
         emailConfirm: ['', [Validators.required, Validators.email]]
-      }, { validator: emailValidation })
+      }, { validator: emailValidation }),
+      addresses: this.formBuilder.array([this.buildAddress()])
     });
 
     // this.productForm.get('emailGroup')?.valueChanges.subscribe(
@@ -87,13 +94,24 @@ export class ProductsAddComponent implements OnInit {
     this.isEditMode$ = this.store.select(getIsEditMode);
   }
 
+  buildAddress(): FormGroup {
+    return this.formBuilder.group({
+      city: '',
+      street: '',
+      postCode: ''
+    })
+  }
+
+  addAddress(): void {
+    this.addresses.push(this.buildAddress());
+  }
+
   cancelEditMode(): void {
     this.store.dispatch(ProductPageAction.setIsEditModeOnFalse());
     this.store.dispatch(ProductPageAction.clearCurrentProduct());
   }
 
   save(): void {
-    throw new Error('Method not implemented.');
   }
 
   populateTestData(): void {
@@ -137,5 +155,9 @@ export class ProductsAddComponent implements OnInit {
     }
 
     console.log(this.emailMessages);
+  }
+
+  setShowAddress() {
+    this.showAddress = !this.showAddress;
   }
 }

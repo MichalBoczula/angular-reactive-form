@@ -39,4 +39,8 @@ export class ProductsEditComponent implements OnInit {
 
     this.isEditMode$ = this.store.select(getIsEditMode);
   }
+
+  save(): void {
+    console.log("rawrrrr");
+  }
 }

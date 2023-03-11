@@ -1,4 +1,4 @@
-<form class="row g-3 text-dark pb-2" *ngIf="(chosenProduct$ | async) && !(isEditMode$ | async)">
+<form class="row g-3 text-dark pb-2" *ngIf="(chosenProduct$ | async) && !(isEditMode$ | async)" (ngSubmit)="save()">
     <div class="col-md-6">
         <label for="name" class="form-label">Product name</label>
         <input type="text" class="form-control" id="name" value="{{(chosenProduct$ | async)?.productName}}">

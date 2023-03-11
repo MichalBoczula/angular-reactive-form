@@ -5,19 +5,19 @@
         <div class="col-md-6">
             <label for="name" class="form-label">Email</label>
             <input type="text" class="form-control" id="email" formControlName="email">
-            <span *ngIf="productForm.get('emailGroup.email')?.errors">
+            <div class="alert alert-danger" *ngIf="productForm.get('emailGroup.email')?.errors">
                 <!-- {{productForm.get('emailGroup.email')?.errors?.['email']}} -->
                 {{emailMessages}}
-            </span>
+            </div>
         </div>
 
         <div class="col-md-6">
             <label for="name" class="form-label">Confirm email</label>
             <input type="text" class="form-control" id="emailConfirm" formControlName="emailConfirm">
-            <span *ngIf="productForm.get('emailGroup.emailConfirm')?.errors">
+            <div class="alert alert-danger" *ngIf="productForm.get('emailGroup.emailConfirm')?.errors">
                 <!-- {{Emails: {{productForm.get('emailGroup')?.errors?.['the same emails']}}}} -->
                 {{emailMessages}}
-            </span>
+            </div>
         </div>
     </div>
 
@@ -54,14 +54,43 @@
             {{productForm.get('price')?.errors?.['minLength']}}
         </span>
     </div>
+
+    <div class="form-check form-switch col-md-6">
+        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" (click)="setShowAddress()">
+        <label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox input</label>
+    </div>
+
+    <div *ngIf="showAddress">
+        <div formArrayName="addresses">
+            <div [formGroupName]="i" *ngFor="let address of addresses.controls; let i = index">
+                <h3>Address</h3>
+                <div class="col-md-6">
+                    <label attr.for="{{'city' + i}}" class="form-label">City</label>
+                    <input type="text" class="form-control" id="{{'city' + i}}" formControlName="city">
+                </div>
+                <div class="col-md-6">
+                    <label attr.for="{{'street' + i}}" class="form-label">Street</label>
+                    <input type="text" class="form-control" id="{{'street' + i}}" formControlName="street">
+                </div>
+                <div class="col-md-6">
+                    <label attr.for="{{'postCode' + i}}" class="form-label">Postal Code</label>
+                    <input type="text" class="form-control" id="{{'postCode' + i}}" min="0" step="0.01"
+                        formControlName="postCode">
+                </div>
+            </div>
+        </div>
+        <br>
+        <button type="button" class="btn btn-primary" (click)="addAddress()">Add Address</button>
+    </div>
+
     <div class="col-12">
         <button type="button" class="btn btn-primary" [disabled]="!productForm.valid">Add</button>
         <button type="button" class="btn btn-primary" (click)="cancelEditMode()">Cancel</button>
         <button type="button" class="btn btn-primary" (click)="populateTestData()">TestData</button>
     </div>
     <br>
-    <br>Dirty: {{productForm.dirty}}
+    <!-- <br>Dirty: {{productForm.dirty}}
     <br>Touched: {{productForm.touched}}
     <br>Valid: {{productForm.valid}}
-    <br>Value: {{productForm.value | json}}
+    <br>Value: {{productForm.value | json}} -->
 </form>

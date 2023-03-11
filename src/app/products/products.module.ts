@@ -8,7 +8,7 @@ import { ProductReducer } from './state/product.reducer';
 import { ProductsAddComponent } from './products-add/products-add/products-add.component';
 import { EffectsModule } from '@ngrx/effects';
 import { ProductEffects } from './state/product.effects';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -21,7 +21,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     HttpClientModule,
     StoreModule.forFeature('products', ProductReducer),
     EffectsModule.forFeature([ProductEffects]),
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ],
   exports: [
     ProductsListComponent
